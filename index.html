@@ -4,7 +4,158 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bahlilil Etanol</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --bg-light: #f8fafc;
+            --dark-ui: #0f172a;
+            --accent: #E63946;
+            --accent-hover: #c53030;
+            --glass: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background: #020617; 
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; 
+        }
+
+        /* --- BACKGROUND KOTA MALAM --- */
+        canvas { 
+            display: block; 
+            margin: 0 auto; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.8); 
+            background-color: #0f172a; 
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.8), rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+                linear-gradient(to right, #020617 0%, #020617 50px, transparent 50px),
+                linear-gradient(to right, transparent 70px, #020617 70px, #020617 130px, transparent 130px),
+                linear-gradient(to right, transparent 20px, #0f172a 20px, #0f172a 80px, transparent 80px),
+                linear-gradient(to right, transparent 110px, #0f172a 110px, #0f172a 180px, transparent 180px),
+                linear-gradient(to right, transparent 10px, #1e293b 10px, #1e293b 90px, transparent 90px),
+                linear-gradient(to bottom, #020617 0%, #1e293b 100%);
+            background-size: 150px 150px, 200px 200px, 250px 250px, 160px 30%, 220px 45%, 200px 50%, 270px 65%, 240px 70%, 100% 100%;
+            background-repeat: repeat, repeat, repeat, repeat-x, repeat-x, repeat-x, repeat-x, repeat-x, no-repeat;
+            animation: moveCity 10s linear infinite;
+        }
+
+        @keyframes moveCity {
+            0% { background-position: 0 0, 0 0, 0 0, 0 bottom, 0 bottom, 0 bottom, 0 bottom, 0 bottom, 0 0; }
+            100% { background-position: -150px 0, -200px 0, -250px 0, -320px bottom, -440px bottom, -200px bottom, -270px bottom, -120px bottom, 0 0; }
+        }
+        
+        /* Overlay UI Modern (Glassmorphism) */
+        .overlay {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 500px; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--glass);
+            backdrop-filter: blur(12px); /* Efek blur kaca */
+            -webkit-backdrop-filter: blur(12px);
+            color: var(--bg-light); 
+            text-align: center; z-index: 10;
+            opacity: 0; visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .overlay.active { opacity: 1; visibility: visible; }
+
+        /* In-game Score UI */
+        #game-ui {
+            position: absolute; top: 25px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 460px; display: flex; justify-content: space-between;
+            z-index: 5; pointer-events: none; display: none;
+        }
+
+        .ui-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            color: white; 
+            padding: 8px 18px;
+            border-radius: 14px; 
+            font-weight: 700; 
+            font-size: 16px; 
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        h1 { 
+            font-size: 42px; 
+            font-weight: 900;
+            margin-bottom: 10px; 
+            letter-spacing: -1px;
+            background: linear-gradient(to bottom, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .highscore-tag { 
+            font-size: 14px; 
+            color: #fbbf24; 
+            margin-bottom: 30px; 
+            background: rgba(251, 191, 36, 0.1); 
+            padding: 6px 16px; 
+            border-radius: 100px; 
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-group { display: flex; flex-direction: column; gap: 12px; width: 85%; }
+
+        button {
+            padding: 18px; 
+            font-size: 15px; 
+            font-weight: 800; 
+            cursor: pointer;
+            color: white; 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid var(--glass-border); 
+            border-radius: 16px;
+            transition: all 0.2s ease; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        button:active { transform: scale(0.96); }
+
+        .btn-primary {
+            background: white;
+            color: var(--dark-ui);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: #e2e8f0;
+            color: var(--dark-ui);
+        }
+
+        .btn-special { 
+            background: var(--accent); 
+            color: white; 
+            border: none;
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+        }
+        
+        .btn-special:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 13px;
+        }
+    </style>
 </head>
 <body>
 
@@ -17,12 +168,168 @@
         <h1>Bahlilil Etanol</h1>
         <div class="highscore-tag">🏆 Top Skor: <span id="main-highscore">0</span></div>
         <div class="btn-group">
-            <button class="btn-primary" onclick="showDifficultyMenu()">Mulai</button>
+            <button class="btn-primary" onclick="showDifficultyMenu()">Main Sekarang</button>
+        </div>
+    </div>
+
+    <div id="difficulty-menu" class="overlay">
+        <h1>Pilih Level</h1>
+        <div class="btn-group">
+            <button class="btn-primary" onclick="startGame('normal')">Mode Normal</button>
+            <button class="btn-special" onclick="startGame('wni')">Mode WNI (Cepat)</button>
+            <button class="btn-outline" onclick="showStartScreen()">Kembali</button>
+        </div>
+    </div>
+
+    <div id="game-over-menu" class="overlay">
+        <h1 style="background: linear-gradient(to bottom, #ff7e7e, #E63946); -webkit-background-clip: text;">Game Over</h1>
+        <div id="total-score" style="font-size: 32px; font-weight: 800; margin-bottom: 5px;">0</div>
+        <div class="highscore-tag">🏆 Rekor: <span id="over-highscore">0</span></div>
+        <div class="btn-group" style="margin-top: 10px;">
+            <button class="btn-special" onclick="showDifficultyMenu()">Coba Lagi</button>
+            <button class="btn-outline" onclick="showStartScreen()">Menu Utama</button>
         </div>
     </div>
 
     <canvas id="gameCanvas"></canvas>
 
-    <script src="script.js"></script>
+    <script>
+        // Logika JavaScript tetap sama sesuai kode asli Anda
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const gameUI = document.getElementById('game-ui');
+        const scoreDisplay = document.getElementById('current-score');
+        const topScoreInGame = document.getElementById('top-score-ingame');
+        
+        const overlays = document.querySelectorAll('.overlay');
+        const startScreen = document.getElementById('start-screen');
+        const difficultyMenu = document.getElementById('difficulty-menu');
+        const gameOverMenu = document.getElementById('game-over-menu');
+
+        canvas.width = window.innerWidth > 500 ? 500 : window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const playerImg = new Image();
+        playerImg.src = 'balil.png';
+        const foodImg = new Image();
+        foodImg.src = 'etanol.png';
+
+        let score = 0;
+        let isPlaying = false;
+        let foods = [];
+        let foodTimer = 0;
+        let difficulty = 'normal';
+        let highscore = localStorage.getItem('bahlilHighscore') || 0;
+
+        document.getElementById('main-highscore').innerText = highscore;
+
+        const player = {
+            x: canvas.width / 2 - 100,
+            y: canvas.height - 210,
+            width: 200,
+            height: 200,
+            speed: 12
+        };
+
+        const keys = {};
+        window.addEventListener('keydown', e => keys[e.code] = true);
+        window.addEventListener('keyup', e => keys[e.code] = false);
+
+        let touchX = null;
+        window.addEventListener('touchstart', e => { if(isPlaying) touchX = e.touches[0].clientX; });
+        window.addEventListener('touchend', () => touchX = null);
+
+        function hideAllOverlays() { overlays.forEach(el => el.classList.remove('active')); }
+
+        function showStartScreen() {
+            hideAllOverlays();
+            setTimeout(() => {
+                document.getElementById('main-highscore').innerText = highscore;
+                startScreen.classList.add('active');
+            }, 100); 
+        }
+
+        function showDifficultyMenu() {
+            hideAllOverlays();
+            setTimeout(() => { difficultyMenu.classList.add('active'); }, 100);
+        }
+
+        function startGame(mode) {
+            hideAllOverlays();
+            difficulty = mode;
+            score = 0;
+            foods = [];
+            foodTimer = 0;
+            isPlaying = true;
+            player.x = canvas.width / 2 - player.width / 2;
+            scoreDisplay.innerText = `SKOR: ${score}`;
+            topScoreInGame.innerText = `🏆 ${highscore}`;
+            gameUI.style.display = 'flex';
+        }
+
+        function triggerGameOver() {
+            if (!isPlaying) return; 
+            isPlaying = false;
+            gameUI.style.display = 'none';
+            if (score > highscore) {
+                highscore = score;
+                localStorage.setItem('bahlilHighscore', highscore);
+            }
+            document.getElementById('total-score').innerText = score;
+            document.getElementById('over-highscore').innerText = highscore;
+            setTimeout(() => { gameOverMenu.classList.add('active'); }, 300);
+        }
+
+        function spawnFood() {
+            let bonusSpeed = Math.floor(score / 200);
+            let baseSpeed = (difficulty === 'wni') ? 22 : 10;
+            foods.push({
+                x: Math.random() * (canvas.width - 60),
+                y: -70,
+                width: 70,
+                height: 70,
+                speed: baseSpeed + (Math.random() * 4) + bonusSpeed
+            });
+        }
+
+        function update() {
+            if (!isPlaying) return;
+            if ((keys['ArrowLeft'] || keys['KeyA']) && player.x > -50) player.x -= player.speed;
+            if ((keys['ArrowRight'] || keys['KeyD']) && player.x < canvas.width - player.width + 50) player.x += player.speed;
+
+            if (touchX !== null) {
+                if (touchX < window.innerWidth / 2 && player.x > -50) player.x -= player.speed;
+                if (touchX > window.innerWidth / 2 && player.x < canvas.width - player.width + 50) player.x += player.speed;
+            }
+
+            foodTimer++;
+            if (foodTimer % 40 === 0) spawnFood();
+
+            for (let i = foods.length - 1; i >= 0; i--) {
+                const f = foods[i];
+                f.y += f.speed;
+                if (f.x + 20 < player.x + player.width - 20 && f.x + f.width - 20 > player.x + 20 &&
+                    f.y + 20 < player.y + player.height && f.y + f.height > player.y + 40) {
+                    foods.splice(i, 1);
+                    score += 10;
+                    scoreDisplay.innerText = `SKOR: ${score}`;
+                    if(score > highscore) topScoreInGame.innerText = `🏆 ${score}`;
+                } else if (f.y > canvas.height) {
+                    triggerGameOver();
+                }
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+            foods.forEach(f => ctx.drawImage(foodImg, f.x, f.y, f.width, f.height));
+            update();
+            requestAnimationFrame(draw);
+        }
+
+        playerImg.onload = () => { draw(); };
+    </script>
 </body>
 </html>
+
