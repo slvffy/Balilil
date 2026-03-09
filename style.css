@@ -1,0 +1,147 @@
+        :root {
+            --bg-light: #f8fafc;
+            --dark-ui: #0f172a;
+            --accent: #E63946;
+            --accent-hover: #c53030;
+            --glass: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            background: #020617; 
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; 
+        }
+
+        canvas { 
+            display: block; 
+            margin: 0 auto; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.8); 
+            background-color: #0f172a; 
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.8), rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 90px 40px, #ffffff, rgba(0,0,0,0)),
+                linear-gradient(to right, #020617 0%, #020617 50px, transparent 50px),
+                linear-gradient(to right, transparent 70px, #020617 70px, #020617 130px, transparent 130px),
+                linear-gradient(to right, transparent 20px, #0f172a 20px, #0f172a 80px, transparent 80px),
+                linear-gradient(to right, transparent 110px, #0f172a 110px, #0f172a 180px, transparent 180px),
+                linear-gradient(to right, transparent 10px, #1e293b 10px, #1e293b 90px, transparent 90px),
+                linear-gradient(to bottom, #020617 0%, #1e293b 100%);
+            background-size: 150px 150px, 200px 200px, 250px 250px, 160px 30%, 220px 45%, 200px 50%, 270px 65%, 240px 70%, 100% 100%;
+            background-repeat: repeat, repeat, repeat, repeat-x, repeat-x, repeat-x, repeat-x, repeat-x, no-repeat;
+            animation: moveCity 10s linear infinite;
+        }
+
+        @keyframes moveCity {
+            0% { background-position: 0 0, 0 0, 0 0, 0 bottom, 0 bottom, 0 bottom, 0 bottom, 0 bottom, 0 0; }
+            100% { background-position: -150px 0, -200px 0, -250px 0, -320px bottom, -440px bottom, -200px bottom, -270px bottom, -120px bottom, 0 0; }
+        }
+        
+        .overlay {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; max-width: 500px; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: var(--bg-light); 
+            text-align: center; z-index: 10;
+            opacity: 0; visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .overlay.active { opacity: 1; visibility: visible; }
+
+        #game-ui {
+            position: absolute; top: 25px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 460px; display: flex; justify-content: space-between;
+            z-index: 5; pointer-events: none; display: none;
+        }
+
+        .ui-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            color: white; 
+            padding: 8px 18px;
+            border-radius: 14px; 
+            font-weight: 700; 
+            font-size: 16px; 
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        h1 { 
+            font-size: 42px; 
+            font-weight: 900;
+            margin-bottom: 10px; 
+            letter-spacing: -1px;
+            background: linear-gradient(to bottom, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .highscore-tag { 
+            font-size: 14px; 
+            color: #fbbf24; 
+            margin-bottom: 30px; 
+            background: rgba(251, 191, 36, 0.1); 
+            padding: 6px 16px; 
+            border-radius: 100px; 
+            border: 1px solid rgba(251, 191, 36, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-group { display: flex; flex-direction: column; gap: 12px; width: 85%; }
+
+        button {
+            padding: 18px; 
+            font-size: 15px; 
+            font-weight: 800; 
+            cursor: pointer;
+            color: white; 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid var(--glass-border); 
+            border-radius: 16px;
+            transition: all 0.2s ease; 
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        button:active { transform: scale(0.96); }
+
+        .btn-primary {
+            background: white;
+            color: var(--dark-ui);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: #e2e8f0;
+            color: var(--dark-ui);
+        }
+
+        .btn-special { 
+            background: var(--accent); 
+            color: white; 
+            border: none;
+            box-shadow: 0 4px 15px rgba(230, 57, 70, 0.3);
+        }
+        
+        .btn-special:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 13px;
+        }
