@@ -12,21 +12,21 @@ const canvas = document.getElementById('gameCanvas');
         canvas.width = window.innerWidth > 500 ? 500 : window.innerWidth;
         canvas.height = window.innerHeight;
 
-        const bahlililImg = new Image();
-        bahlililImg.src = 'balil.png';
-        const ethanolImg = new Image();
-        ethanolImg.src = 'etanols.png';
+        const playerImg = new Image();
+        playerImg.src = 'balil.png';
+        const foodImg = new Image();
+        foodImg.src = 'etanol';
 
         let score = 0;
         let isPlaying = false;
-        let etanol = [];
-        let ethanolTimer = 0;
+        let foods = [];
+        let foodTimer = 0;
         let difficulty = 'normal';
         let highscore = localStorage.getItem('bahlilHighscore') || 0;
 
         document.getElementById('main-highscore').innerText = highscore;
 
-        const bahlilil = {
+        const player = {
             x: canvas.width / 2 - 100,
             y: canvas.height - 210,
             width: 200,
@@ -61,10 +61,10 @@ const canvas = document.getElementById('gameCanvas');
             hideAllOverlays();
             difficulty = mode;
             score = 0;
-            etanol = [];
-            ethanolTimer = 0;
+            foods = [];
+            foodTimer = 0;
             isPlaying = true;
-            bahlilil.x = canvas.width / 2 - bahlilil.width / 2;
+            player.x = canvas.width / 2 - player.width / 2;
             scoreDisplay.innerText = `SKOR: ${score}`;
             topScoreInGame.innerText = `🏆 ${highscore}`;
             gameUI.style.display = 'flex';
@@ -83,10 +83,10 @@ const canvas = document.getElementById('gameCanvas');
             setTimeout(() => { gameOverMenu.classList.add('active'); }, 300);
         }
 
-        function spawnethanol() {
+        function spawnFood() {
             let bonusSpeed = Math.floor(score / 200);
             let baseSpeed = (difficulty === 'wni') ? 22 : 10;
-            etanol.push({
+            foods.push({
                 x: Math.random() * (canvas.width - 60),
                 y: -70,
                 width: 70,
@@ -97,23 +97,23 @@ const canvas = document.getElementById('gameCanvas');
 
         function update() {
             if (!isPlaying) return;
-            if ((keys['ArrowLeft'] || keys['KeyA']) && bahlilil.x > -50) bahlilil.x -= bahlilil.speed;
-            if ((keys['ArrowRight'] || keys['KeyD']) && bahlilil.x < canvas.width - bahlilil.width + 50) bahlilil.x += bahlilil.speed;
+            if ((keys['ArrowLeft'] || keys['KeyA']) && player.x > -50) player.x -= player.speed;
+            if ((keys['ArrowRight'] || keys['KeyD']) && player.x < canvas.width - player.width + 50) player.x += player.speed;
 
             if (touchX !== null) {
-                if (touchX < window.innerWidth / 2 && bahlilil.x > -50) bahlilil.x -= bahlilil.speed;
-                if (touchX > window.innerWidth / 2 && bahlilil.x < canvas.width - bahlilil.width + 50) bahlilil.x += bahlilil.speed;
+                if (touchX < window.innerWidth / 2 && player.x > -50) player.x -= player.speed;
+                if (touchX > window.innerWidth / 2 && player.x < canvas.width - player.width + 50) player.x += player.speed;
             }
 
-            ethanolTimer++;
-            if (ethanolTimer % 40 === 0) spawnethanol();
+            foodTimer++;
+            if (foodTimer % 40 === 0) spawnFood();
 
-            for (let i = etanol.length - 1; i >= 0; i--) {
-                const f = etanol[i];
+            for (let i = foods.length - 1; i >= 0; i--) {
+                const f = foods[i];
                 f.y += f.speed;
-                if (f.x + 20 < bahlilil.x + bahlilil.width - 20 && f.x + f.width - 20 > bahlilil.x + 20 &&
-                    f.y + 20 < bahlilil.y + bahlilil.height && f.y + f.height > bahlilil.y + 40) {
-                    etanol.splice(i, 1);
+                if (f.x + 20 < player.x + player.width - 20 && f.x + f.width - 20 > player.x + 20 &&
+                    f.y + 20 < player.y + player.height && f.y + f.height > player.y + 40) {
+                    foods.splice(i, 1);
                     score += 10;
                     scoreDisplay.innerText = `SKOR: ${score}`;
                     if(score > highscore) topScoreInGame.innerText = `🏆 ${score}`;
@@ -125,10 +125,10 @@ const canvas = document.getElementById('gameCanvas');
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(bahlililImg, bahlilil.x, bahlilil.y, bahlilil.width, bahlilil.height);
-            etanol.forEach(f => ctx.drawImage(ethanolImg, f.x, f.y, f.width, f.height));
+            ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
+            foods.forEach(f => ctx.drawImage(foodImg, f.x, f.y, f.width, f.height));
             update();
             requestAnimationFrame(draw);
         }
 
-        bahlililImg.onload = () => { draw(); };
+        playerImg.onload = () => { draw(); };
