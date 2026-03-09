@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bahlilil Etanol</title>
+    <title>Balilil Etanol</title>
     <style>
         :root {
             --bg-light: #f8fafc;
@@ -21,7 +21,6 @@
             font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; 
         }
 
-        /* --- BACKGROUND KOTA MALAM --- */
         canvas { 
             display: block; 
             margin: 0 auto; 
@@ -47,7 +46,6 @@
             100% { background-position: -150px 0, -200px 0, -250px 0, -320px bottom, -440px bottom, -200px bottom, -270px bottom, -120px bottom, 0 0; }
         }
         
-        /* Overlay UI Modern (Glassmorphism) */
         .overlay {
             position: absolute; top: 0; left: 50%; transform: translateX(-50%);
             width: 100%; max-width: 500px; height: 100%;
@@ -63,7 +61,6 @@
 
         .overlay.active { opacity: 1; visibility: visible; }
 
-        /* In-game Score UI */
         #game-ui {
             position: absolute; top: 25px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 460px; display: flex; justify-content: space-between;
@@ -165,10 +162,10 @@
     </div>
 
     <div id="start-screen" class="overlay active">
-        <h1>Bahlilil Etanol</h1>
+        <h1>Balilil Etanol</h1>
         <div class="highscore-tag">🏆 Top Skor: <span id="main-highscore">0</span></div>
         <div class="btn-group">
-            <button class="btn-primary" onclick="showDifficultyMenu()">Main Sekarang</button>
+            <button class="btn-primary" onclick="showDifficultyMenu()">Mulai</button>
         </div>
     </div>
 
@@ -176,7 +173,7 @@
         <h1>Pilih Level</h1>
         <div class="btn-group">
             <button class="btn-primary" onclick="startGame('normal')">Mode Normal</button>
-            <button class="btn-special" onclick="startGame('wni')">Mode WNI (Cepat)</button>
+            <button class="btn-special" onclick="startGame('wni')">Mode WNI</button>
             <button class="btn-outline" onclick="showStartScreen()">Kembali</button>
         </div>
     </div>
@@ -194,7 +191,6 @@
     <canvas id="gameCanvas"></canvas>
 
     <script>
-        // Logika JavaScript tetap sama sesuai kode asli Anda
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const gameUI = document.getElementById('game-ui');
@@ -209,21 +205,21 @@
         canvas.width = window.innerWidth > 500 ? 500 : window.innerWidth;
         canvas.height = window.innerHeight;
 
-        const playerImg = new Image();
-        playerImg.src = 'balil.png';
-        const foodImg = new Image();
-        foodImg.src = 'etanol.png';
+        const lilibahImg = new Image();
+        lilibahImg.src = 'balil.png';
+        const etanolzImg = new Image();
+        etanolzImg.src = 'etanol.png';
 
         let score = 0;
         let isPlaying = false;
-        let foods = [];
-        let foodTimer = 0;
+        let etanols = [];
+        let etanolzTimer = 0;
         let difficulty = 'normal';
         let highscore = localStorage.getItem('bahlilHighscore') || 0;
 
         document.getElementById('main-highscore').innerText = highscore;
 
-        const player = {
+        const lilibah = {
             x: canvas.width / 2 - 100,
             y: canvas.height - 210,
             width: 200,
@@ -258,10 +254,10 @@
             hideAllOverlays();
             difficulty = mode;
             score = 0;
-            foods = [];
-            foodTimer = 0;
+            etanols = [];
+            etanolzTimer = 0;
             isPlaying = true;
-            player.x = canvas.width / 2 - player.width / 2;
+            lilibah.x = canvas.width / 2 - lilibah.width / 2;
             scoreDisplay.innerText = `SKOR: ${score}`;
             topScoreInGame.innerText = `🏆 ${highscore}`;
             gameUI.style.display = 'flex';
@@ -280,10 +276,10 @@
             setTimeout(() => { gameOverMenu.classList.add('active'); }, 300);
         }
 
-        function spawnFood() {
+        function spawnetanolz() {
             let bonusSpeed = Math.floor(score / 200);
             let baseSpeed = (difficulty === 'wni') ? 22 : 10;
-            foods.push({
+            etanols.push({
                 x: Math.random() * (canvas.width - 60),
                 y: -70,
                 width: 70,
@@ -294,23 +290,23 @@
 
         function update() {
             if (!isPlaying) return;
-            if ((keys['ArrowLeft'] || keys['KeyA']) && player.x > -50) player.x -= player.speed;
-            if ((keys['ArrowRight'] || keys['KeyD']) && player.x < canvas.width - player.width + 50) player.x += player.speed;
+            if ((keys['ArrowLeft'] || keys['KeyA']) && lilibah.x > -50) lilibah.x -= lilibah.speed;
+            if ((keys['ArrowRight'] || keys['KeyD']) && lilibah.x < canvas.width - lilibah.width + 50) lilibah.x += lilibah.speed;
 
             if (touchX !== null) {
-                if (touchX < window.innerWidth / 2 && player.x > -50) player.x -= player.speed;
-                if (touchX > window.innerWidth / 2 && player.x < canvas.width - player.width + 50) player.x += player.speed;
+                if (touchX < window.innerWidth / 2 && lilibah.x > -50) lilibah.x -= lilibah.speed;
+                if (touchX > window.innerWidth / 2 && lilibah.x < canvas.width - lilibah.width + 50) lilibah.x += lilibah.speed;
             }
 
-            foodTimer++;
-            if (foodTimer % 40 === 0) spawnFood();
+            etanolzTimer++;
+            if (etanolzTimer % 40 === 0) spawnetanolz();
 
-            for (let i = foods.length - 1; i >= 0; i--) {
-                const f = foods[i];
+            for (let i = etanols.length - 1; i >= 0; i--) {
+                const f = etanols[i];
                 f.y += f.speed;
-                if (f.x + 20 < player.x + player.width - 20 && f.x + f.width - 20 > player.x + 20 &&
-                    f.y + 20 < player.y + player.height && f.y + f.height > player.y + 40) {
-                    foods.splice(i, 1);
+                if (f.x + 20 < lilibah.x + lilibah.width - 20 && f.x + f.width - 20 > lilibah.x + 20 &&
+                    f.y + 20 < lilibah.y + lilibah.height && f.y + f.height > lilibah.y + 40) {
+                    etanols.splice(i, 1);
                     score += 10;
                     scoreDisplay.innerText = `SKOR: ${score}`;
                     if(score > highscore) topScoreInGame.innerText = `🏆 ${score}`;
@@ -322,13 +318,13 @@
 
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
-            foods.forEach(f => ctx.drawImage(foodImg, f.x, f.y, f.width, f.height));
+            ctx.drawImage(lilibahImg, lilibah.x, lilibah.y, lilibah.width, lilibah.height);
+            etanols.forEach(f => ctx.drawImage(etanolzImg, f.x, f.y, f.width, f.height));
             update();
             requestAnimationFrame(draw);
         }
 
-        playerImg.onload = () => { draw(); };
+        lilibahImg.onload = () => { draw(); };
     </script>
 </body>
 </html>
